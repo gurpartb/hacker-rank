@@ -19,7 +19,7 @@ function repeatedString(s, n) {
     let as = s.split('').count(letter);
 
     // number of time s occurs 'quotient' completely in n
-    let sn = ~~(n/s.length);
+    let sn = Math.floor(n/s.length);
 
     // partial size 'remainder' of s in n
     let r = n % s.length;
