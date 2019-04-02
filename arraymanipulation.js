@@ -29,59 +29,131 @@ var queries = [[29, 40, 787],
 [8, 11, 194],
 [12, 37, 502]]
 
-var arrSet = []
+var arr = [[0,0]]
 
-function merge(arr, brr){
-    let ik = Math.min(arr[0], brr[0]);
-    let jk = Math.max(arr[0], brr[0]) - 1 ;
-    if(ik<=jk){
-        let vk = (arr[0]===ik)? arr[2]: brr[2];
-        arrSet.push([ik,jk,vk]);
+function addSegment(b = [2, 5, 3]){
+
+    let i = 0;
+
+    while(arr[i] && arr[i][0]<b[0]){
+        i++;
     }
-    let ih = jk + 1;
-    let jh = Math.min(arr[1], brr[1]);
-    let vh = arr[2] + brr[2];
-    arrSet.push([ih, jh, vh]);
-    let ip = jh + 1;
-    let jp = Math.max(arr[1], brr[1]);
-    if(ip<=jp){
-        let vp = (arr[1]===jp)? arr[2]: brr[2];
-        add([ip, jp, vp]);
+
+    // case 0: new Segment beyond the last tracked value
+    if(!arr[i]){
+        let c = [b[0], b[2]];
+        let d = [b[1]+1, 0];
+        arr.push(c);
+        arr.push(d);
+        return;
     }
-}
-function add(arr){
-    let brr;
-    for(let i = 0; i < arrSet.length; i++){
-        if(arr[0] <= arrSet[i][0] && arrSet[i][1] <=arr[1]
-        || arrSet[i][0] <= arr[0] && arr[1] <= arrSet[i][1]
-        || arr[0] <= arrSet[i][1] && arrSet[i][1] <= arr[1]
-        || arr[0] <= arrSet[i][0] && arrSet[i][0] <= arr[1]){
-            brr = arrSet.splice(i,1);
-            brr = brr.pop();
-            break;
-        }
+
+    // case 1: new Segment starts at the last tracked value
+    if(arr[i][0]===b[0] && !arr[i+1]){
+        arr[i][1] += b[2]
+        let c = [b[1]+1, 0]
+        arr.push(c);
+        return;
     }
-    if(brr){
-        merge(brr, arr);
+
+    // case 2: new segment starts before arr[i] and end befor a[i]
+    if(b[0]<arr[i][0] && b[1]+1< arr[i][0]){
+        let val = arr[i-1][1];
+        let c = [b[0], b[2]+val];
+        let d = [b[1]+1, val];
+        arr.splice(i,0, c);
+        arr.splice(i+1, 0, d);
+        return;
     }
-    else{
-        arrSet.push(arr)
+
+    // case 3: new segment starts before arr[i] and at arr[i]
+    if(b[0]<arr[i][0] && b[1]+1 === arr[i][0]){
+        let val = arr[i-1][1];
+        let c = [b[0], b[2]+val];
+        arr.splice(i,0,c);
+        return;
     }
+
+    // case 3, 4: new segment starts before arr[i] and ends after arr[i]
+    // good place to for while loop and update all values in between
+    if(b[0]<arr[i][0] && b[1] + 1 > arr[i][0]){
+        let c = [b[0], b[2]+arr[i-1][1]];
+
+        b[0] = arr[i][0];
+        arr.splice(i, 0, c);
+        // optimize by add while loop to update all values in between
+        // so a single recursive call is made at very end
+        addSegment(b);
+        return;
+    }
+
+    // case 4: new segment starts at arr[i] ends before arr[i+1]
+    if(b[0]===arr[i][0] && b[1]+1 < arr[i+1][0]){
+        let val = arr[i][1];
+        arr[i][1] += b[2];
+        let c = [b[1]+1, val];
+        arr.splice(i+1, 0, c);
+        return;
+    }
+
+    // case 5: new segment starts at arr[i] ends at arr[i+1]
+    if(b[0]===arr[i][0] && b[1]+1 === arr[i+1][0]){
+        arr[i][1] += b[2];
+        return;
+    }
+
+    // case 5, 4: new segment stats at arr[i] ends after arr[i+1]
+    // good place to for while loop and update all values in between
+    if(b[0]===arr[i][0] && b[1]+1 > arr[i+1][0]){
+        arr[i][1] += b[2]; // same as case 5:
+        b[0] = arr[i+1][0]; // update b[] and make call to case 4:
+        addSegment(b);
+        return;
+    }
+
+    // case 5,5,1: new segment covers (one or multiple) segments in between
+    // and ends after the last tracked index
+
+    // case 3, 5, 1: new segment starts before arr[i], covers (one or multiple)
+    // segments in betweena and ends after the last tracked index
 }
 
-// Complete the arrayManipulation function below.
-function arrayManipulation(n, queries) {
-    queries.forEach( arr =>{
-        add(arr);
+function arrayManipulation(n, queries){
+    queries.forEach(b=>{
+        addSegment(b);
     });
-    let maxVal = arrSet[0][2];
-    arrSet.forEach(arr =>{
-        if(arr[2]>maxVal){
-            maxVal = arr[2];
-        }
+    let max = 0;
+    arr.forEach(a=>{
+        if(a[1]>max){
+            max = a[1];
+        };
     });
-    return maxVal;
+    return max;
 }
 
-console.log(arrayManipulation(0, queries))
-// 8268
+console.log(arrayManipulation(0, queries));
+
+// // test case 0:
+// addSegment([5,10,3])
+// console.log(arr)
+// // test case 1:
+// addSegment([11,15,4])
+// console.log(arr);
+// // test case 2:
+// addSegment([2,3,1])
+// console.log(arr)
+// // test case 5:
+// addSegment([2,3,1])
+// console.log(arr);
+// // test case 4:
+// addSegment([5,7,1])
+// console.log(arr)
+// // test case 3:
+// addSegment([13,15,1])
+// console.log(arr)
+// // test case 3, 4
+// addSegment([7,12,1])
+// console.log(arr)
+// // test case 
+// addSegment([2,18,1])
+// console.log(arr)
