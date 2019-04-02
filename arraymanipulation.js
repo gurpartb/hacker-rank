@@ -46,14 +46,6 @@ function addSegment(b = [2, 5, 3], i = 0){
         return;
     }
 
-    // case 1: new Segment starts at the last tracked value
-    if(arr[i][0]===b[0] && !arr[i+1]){
-        arr[i][1] += b[2]
-        let c = [b[1]+1, 0]
-        arr.push(c);
-        return;
-    }
-
     // case 2: new segment starts before arr[i] and end befor a[i]
     if(b[0]<arr[i][0]){
 
@@ -91,6 +83,7 @@ function addSegment(b = [2, 5, 3], i = 0){
 
     // case 4: new segment starts at arr[i] ends before arr[i+1]
     if(b[0]===arr[i][0]){
+        // case 1: new Segment starts at the last tracked value
         if(!arr[i+1]){
             arr[i][1] += b[2]
             let c = [b[1]+1, 0]
