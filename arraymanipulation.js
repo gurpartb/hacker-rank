@@ -31,9 +31,7 @@ var queries = [[29, 40, 787],
 
 var arr = [[0,0]]
 
-function addSegment(b = [2, 5, 3]){
-
-    let i = 0;
+function addSegment(b = [2, 5, 3], i = 0){
 
     while(arr[i] && arr[i][0]<b[0]){
         i++;
@@ -83,32 +81,38 @@ function addSegment(b = [2, 5, 3]){
         arr.splice(i, 0, c);
         // optimize by add while loop to update all values in between
         // so a single recursive call is made at very end
-        addSegment(b);
+        addSegment(b, i+1);
         return;
     }
 
     // case 4: new segment starts at arr[i] ends before arr[i+1]
-    if(b[0]===arr[i][0] && b[1]+1 < arr[i+1][0]){
-        let val = arr[i][1];
-        arr[i][1] += b[2];
-        let c = [b[1]+1, val];
-        arr.splice(i+1, 0, c);
-        return;
-    }
+    if(b[0]===arr[i][0]){
+        if(b[1]+1 < arr[i+1][0]){
+            let val = arr[i][1];
+            arr[i][1] += b[2];
+            let c = [b[1]+1, val];
+            arr.splice(i+1, 0, c);
+            return;
+        }
+    
 
-    // case 5: new segment starts at arr[i] ends at arr[i+1]
-    if(b[0]===arr[i][0] && b[1]+1 === arr[i+1][0]){
-        arr[i][1] += b[2];
-        return;
-    }
+        // case 5: new segment starts at arr[i] ends at arr[i+1]
+        if(b[1]+1 === arr[i+1][0]){
+            arr[i][1] += b[2];
+            return;
+        }
 
-    // case 5, 4: new segment stats at arr[i] ends after arr[i+1]
-    // good place to for while loop and update all values in between
-    if(b[0]===arr[i][0] && b[1]+1 > arr[i+1][0]){
-        arr[i][1] += b[2]; // same as case 5:
-        b[0] = arr[i+1][0]; // update b[] and make call to case 4:
-        addSegment(b);
-        return;
+        // case 5, 4: new segment stats at arr[i] ends after arr[i+1]
+        // good place to for while loop and update all values in between
+        if(b[1]+1 > arr[i+1][0]){
+            while(arr[i+1] && b[1]+1 > arr[i+1][0]){
+                arr[i][1] += b[2]; // same as case 5:
+                i++;
+            }
+            b[0] = arr[i][0]; // update b[] and make call to case 4:
+            addSegment(b, i);
+            return;
+        }
     }
 
     // case 5,5,1: new segment covers (one or multiple) segments in between
@@ -151,9 +155,15 @@ console.log(arrayManipulation(0, queries));
 // // test case 3:
 // addSegment([13,15,1])
 // console.log(arr)
-// // test case 3, 4
+// // test case 3, 4:
 // addSegment([7,12,1])
 // console.log(arr)
-// // test case 
+// // test case 5, 5, 1:
 // addSegment([2,18,1])
 // console.log(arr)
+// // test case 3, 1:
+// // test case 3, 5:
+// // test case 3, 5, 1:
+// // test 3, 5, 5, 5, 4:
+// // test 3, 5, 5, 5, 1:
+// // test 5, 5, 5, 4:
