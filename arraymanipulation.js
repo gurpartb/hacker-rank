@@ -83,13 +83,21 @@ function addSegment(b = [2, 5, 3], i = 0){
             arr.splice(i, 0, c);
             // optimize by add while loop to update all values in between
             // so a single recursive call is made at very end
-            addSegment(b, i+1);
-            return;
+            // addSegment(b, i+1);
+            // return;
+            i++;
         }
     }
 
     // case 4: new segment starts at arr[i] ends before arr[i+1]
     if(b[0]===arr[i][0]){
+        if(!arr[i+1]){
+            arr[i][1] += b[2]
+            let c = [b[1]+1, 0]
+            arr.push(c);
+            return;
+        }
+
         if(b[1]+1 < arr[i+1][0]){
             let val = arr[i][1];
             arr[i][1] += b[2];
