@@ -55,34 +55,37 @@ function addSegment(b = [2, 5, 3], i = 0){
     }
 
     // case 2: new segment starts before arr[i] and end befor a[i]
-    if(b[0]<arr[i][0] && b[1]+1< arr[i][0]){
-        let val = arr[i-1][1];
-        let c = [b[0], b[2]+val];
-        let d = [b[1]+1, val];
-        arr.splice(i,0, c);
-        arr.splice(i+1, 0, d);
-        return;
-    }
+    if(b[0]<arr[i][0]){
 
-    // case 3: new segment starts before arr[i] and at arr[i]
-    if(b[0]<arr[i][0] && b[1]+1 === arr[i][0]){
-        let val = arr[i-1][1];
-        let c = [b[0], b[2]+val];
-        arr.splice(i,0,c);
-        return;
-    }
+        if(b[1]+1 < arr[i][0]){
+            let val = arr[i-1][1];
+            let c = [b[0], b[2]+val];
+            let d = [b[1]+1, val];
+            arr.splice(i,0, c);
+            arr.splice(i+1, 0, d);
+            return;
+        }
 
-    // case 3, 4: new segment starts before arr[i] and ends after arr[i]
-    // good place to for while loop and update all values in between
-    if(b[0]<arr[i][0] && b[1] + 1 > arr[i][0]){
-        let c = [b[0], b[2]+arr[i-1][1]];
+        // case 3: new segment starts before arr[i] and at arr[i]
+        if(b[1]+1 === arr[i][0]){
+            let val = arr[i-1][1];
+            let c = [b[0], b[2]+val];
+            arr.splice(i,0,c);
+            return;
+        }
 
-        b[0] = arr[i][0];
-        arr.splice(i, 0, c);
-        // optimize by add while loop to update all values in between
-        // so a single recursive call is made at very end
-        addSegment(b, i+1);
-        return;
+        // case 3, 4: new segment starts before arr[i] and ends after arr[i]
+        // good place to for while loop and update all values in between
+        if(b[1] + 1 > arr[i][0]){
+            let c = [b[0], b[2]+arr[i-1][1]];
+
+            b[0] = arr[i][0];
+            arr.splice(i, 0, c);
+            // optimize by add while loop to update all values in between
+            // so a single recursive call is made at very end
+            addSegment(b, i+1);
+            return;
+        }
     }
 
     // case 4: new segment starts at arr[i] ends before arr[i+1]
