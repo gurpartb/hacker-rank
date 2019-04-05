@@ -2,7 +2,7 @@ Array.prototype.counter = function(){
 
     let obj = {}; 
 
-    this.forEach( el =>{
+    this.forEach( (el) =>{
 
         if(obj[el]){
 
@@ -32,16 +32,16 @@ function makeAnagram(a, b) {
 
         if(objb[key]){
 
-            diff += Math.abs(objb[ key ] - obja[ key ]);
-            objb[ key ] = 0;
+            diff += Math.abs( objb[key] - obja[key] );
+            objb[key] = 0;
         }
         else {
 
-            diff += obja[ key ];
+            diff += obja[key];
         }
     }
 
-    diff = Object.values( objb ).reduce( ( a, b ) => a + b, diff );
+    diff = Object.values( objb ).reduce( (a, b) => a + b, diff );
 
     return diff;
 }
