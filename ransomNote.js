@@ -22,10 +22,7 @@ function checkMagazine(magazine, note) {
     let magCount = magazine.counter();
     let noteCount = note.counter();
 
-    let isSubSet = Object.keys( noteCount ).every( el =>{
-
-        return (magCount[el] && noteCount[el] <= magCount[el]);
-    })
+    let isSubSet = Object.keys( noteCount ).every( el => noteCount[el] <= magCount[el] );
 
     console.log(isSubSet? 'Yes':'No');
 }
