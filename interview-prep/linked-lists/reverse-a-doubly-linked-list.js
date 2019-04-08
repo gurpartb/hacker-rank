@@ -16,7 +16,7 @@ function reverse(head) {
         curr.next = prev;
 
         // since prev was initially undefined,
-        // simply set prev to curr to move to step forward
+        // simply set prev to curr and move forward
         prev = curr;
         curr = curr.prev;
     }
