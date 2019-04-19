@@ -1,11 +1,11 @@
 function utopianTree(n) {
 
     let cycle = 0;
-    let height = 1;
+    let height = 0;
 
-    while(cycle < n){
+    while(cycle <= n){
         
-        height = (cycle % 2)? height + 1 : height + height;
+        height = (cycle % 2)? height + height : height + 1;
         cycle++;
     }
 
