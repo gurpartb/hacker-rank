@@ -14,13 +14,13 @@ function viralAdvertising(n) {
     let m = 3;
 
     let s0 = 5;
-    let shares = [s0];
+    let shares = [0, s0];
 
-    let l0 = getLikes(shares[0], d);
-    let likes = [l0];
+    let l0 = getLikes( shares[1], d);
+    let likes = [0, l0];
 
-    let i = 1;
-    while(i < n){
+    let i = 2;
+    while(i <= n){
 
         shares[i] = getShares( likes[i-1], m );
         likes[i] = getLikes( shares[i], d);
