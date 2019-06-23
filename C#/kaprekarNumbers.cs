@@ -1,4 +1,5 @@
-static void kaprekarNumbers(int p, int q) {
+static void kaprekarNumbers(int p, int q)
+{
 
     int i = p;
     int kapreKarCount = 0;
@@ -19,7 +20,8 @@ static void kaprekarNumbers(int p, int q) {
     }
 }
 
-static bool isKaprekarNumber(int n){
+static bool isKaprekarNumber(int n)
+{
 
     long m = (long) n*n;
     String mStr = m.ToString();
