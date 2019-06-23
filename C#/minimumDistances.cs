@@ -4,7 +4,7 @@ static int minimumDistances(int[] arr)
     Dictionary<int, int > map = new Dictionary<int,int >();
 
     int i = 0;
-    int min = -1;
+    int min = arr.Length;
 
     foreach(int n in arr)
     {
@@ -12,12 +12,7 @@ static int minimumDistances(int[] arr)
         if(map.TryGetValue(n, out int lastIndex))
         {
             int dist = Math.Abs(lastIndex - i);
-
-            if(min > dist || min == -1)
-            {
-
-                min = dist;
-            }
+            min = Math.Min(min, dist);
             map[n] = i;
 
         } else {
@@ -28,5 +23,5 @@ static int minimumDistances(int[] arr)
         i++;
     }
 
-    return min;
+    return (min == arr.Length)? -1 : min;
 }
